@@ -1,0 +1,48 @@
+# Test API OpenWeatherMap.  
+# Test trwa 60s przy obciążeniu 10 użytkowników na sekundę.
+
+config:
+  target: "https://api.openweathermap.org/data/2.5"
+  phases:
+    - duration: 60  
+      arrivalRate: 10  
+  defaults:
+    headers:
+      Content-Type: "application/json"
+  payload:
+    path: "./data.json"  
+    fields:
+      - "city"
+      - "issue"
+
+scenarios:
+  - name: "GET and POST requests"
+    flow:
+      - get:
+          url: "/weather"
+          qs:
+            q: "London"
+            appid: "YOUR_API_KEY"
+      - capture:
+          json: "$.main.temp"  
+          as: "temp"
+      - post:
+          url: "/feedback"
+          json:
+            city: "{{ city }}"
+            issue: "{{ issue }}"
+          expect:
+            - statusCode: 200
+      - think: 1  
+
+ensure:
+  - response_time:
+      p95: under 500  
+  - errors: 0  
+  - status_codes:
+      2xx: 100  
+
+
+# 95% odpowiedzi w czasie poniżej 500 ms
+ # Brak błędów
+ # 100% odpowiedzi to kody 2xx

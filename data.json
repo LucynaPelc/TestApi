@@ -1,0 +1,6 @@
+[
+    { "city": "London", "issue": "Heavy rain reported" },
+    { "city": "Berlin", "issue": "Wind speed anomaly" },
+    { "city": "Warsaw", "issue": "Temperature spike detected" }
+  ]
+  
